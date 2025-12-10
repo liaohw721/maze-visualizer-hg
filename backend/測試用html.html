@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>DFS 結果顯示</title>
+  <style>
+    body {
+      font-family: monospace;
+      background-color: #f8f8f8;
+      padding: 20px;
+    }
+    pre {
+      background-color: #fff;
+      padding: 15px;
+      border: 1px solid #ccc;
+      overflow-x: auto;
+    }
+    button {
+      font-size: 16px;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>迷宮解法結果（JSON）</h2>
+  <button onclick="sendRequest()">送出請求</button>
+  <pre id="output">等待結果...</pre>
+
+  <script>
+    function sendRequest() {
+      const data = {
+        map: [
+          [0, 1, 0, 1, 0],
+          [0, 0, 0, 0, 1],
+          [0, 0, 1, 0, 0],
+          [1, 0, 0, 0, 0],
+          [0, 0, 0, 1, 1]
+        ],
+        start: [0, 0],
+        end: [4, 4],
+        algorithm: "DFS"
+      };
+
+      fetch("http://127.0.0.1:5000/solve", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(json => {
+        const formatted = JSON.stringify(json, null, 2); // 美化縮排
+        document.getElementById("output").textContent = formatted;
+      })
+      .catch(error => {
+        document.getElementById("output").textContent = "錯誤：" + error;
+      });
+    }
+  </script>
+
+</body>
+</html>
